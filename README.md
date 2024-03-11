@@ -32,3 +32,32 @@
 ## Extra Credits
 
 - **Envío de confirmación vía email**: Implementar un sistema que automáticamente envíe un email al usuario al reservar o cancelar un turno.
+
+## Esquema de la Base de Datos
+
+### Entidades y Atributos
+
+#### Users
+
+- `user_id`: único para cada usuario (INT)
+- `name`: nombre del usuario (VARCHAR)
+- `email`: email del usuario (VARCHAR)
+- `role`: cliente o administrador (ENUM)
+
+#### Appointments
+
+- `appointment_id`: único para cada turno (INT)
+- `datetime`: fecha y hora del turno (DATETIME)
+- `user_id`: quién reserva el turno (INT, FOREIGN KEY)
+- `status`: reservado, cancelado (ENUM)
+
+#### Credentials (integradas en la tabla de Users)
+
+- `user_id`: (INT, FOREIGN KEY)
+- `username`: (VARCHAR)
+- `password`: (VARCHAR)
+
+### Relaciones Entre Entidades
+
+- Cada turno (`Appointments`) está asociado a un único usuario (`Users`), pero un usuario puede tener múltiples turnos reservados.
+- Los administradores tienen acceso a todas las reservas para su gestión.

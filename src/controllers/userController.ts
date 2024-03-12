@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import * as userService from '../services/userService';
+import * as credentialService from '../services/credentialService';
 
 export const getAllUsers = (req: Request, res: Response) => {
   const users = userService.getUsers();
@@ -23,5 +24,23 @@ export const registerUser = (req: Request, res: Response) => {
 };
 
 export const loginUser = (req: Request, res: Response) => {
-  res.send('Login del usuario.');
+  const { username, password } = req.body;
+  // Usar checkCredential para verificar las credenciales del usuario.
+  const credentialsId = credentialService.checkCredential(username, password);
+  
+if (credentialsId !== undefined) {
+    // Si las credenciales son correctas, encuentra al usuario correspondiente.
+    const user = userService.getUsers().find(user => user.credentialsId === credentialsId);
+    
+    if (user) {
+        // Si se encuentra al usuario, login exitoso.
+        res.json({ message: 'Login successful', userId: user.id });
+    } else {
+        // Si no se encuentra al usuario, aunque las credenciales sean correctas.
+        res.status(404).send('User not found');
+    }
+} else {
+    // Si las credenciales son inválidas.
+    res.status(401).send('Invalid credentials');
+}
 };

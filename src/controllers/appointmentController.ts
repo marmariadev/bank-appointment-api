@@ -1,19 +1,29 @@
 import { Request, Response } from 'express';
+import * as appointmentService from '../services/appointmentService';
 
 export const getAllAppointments = (req: Request, res: Response) => {
-  res.send('Listado de todos los turnos.');
+  const appointments = appointmentService.getAppointments();
+  res.json(appointments);
 };
 
-export const getAppointmentById = (req: Request, res: Response) => {
-  const { id } = req.params;
-  res.send(`Detalle del turno ${id}.`);
+export const getAppointment = (req: Request, res: Response) => {
+  const appointment = appointmentService.getAppointmentById(parseInt(req.params.id));
+  if (appointment) {
+    res.json(appointment);
+  } else {
+    res.status(404).send('Appointment not found');
+  }
 };
 
 export const scheduleAppointment = (req: Request, res: Response) => {
-  res.send('Agendar un nuevo turno.');
+  const { date, time, userId } = req.body;
+  // Suponiendo que el body ya está validado
+  const newAppointment = appointmentService.createAppointment(new Date(date), time, userId);
+  res.status(201).json(newAppointment);
 };
 
-export const cancelAppointment = (req: Request, res: Response) => {
+export const cancelAppointmentController = (req: Request, res: Response) => {
   const { id } = req.params;
-  res.send(`Cancelar el turno ${id}.`);
+  appointmentService.cancelAppointment(parseInt(id));
+  res.send(`Appointment ${id} cancelled.`);
 };

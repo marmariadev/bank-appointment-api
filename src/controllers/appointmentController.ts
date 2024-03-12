@@ -22,7 +22,7 @@ export const scheduleAppointment = (req: Request, res: Response) => {
   res.status(201).json(newAppointment);
 };
 
-export const cancelAppointmentController = (req: Request, res: Response) => {
+export const cancelAppointment = (req: Request, res: Response) => {
   const { id } = req.params;
   appointmentService.cancelAppointment(parseInt(id));
   res.send(`Appointment ${id} cancelled.`);

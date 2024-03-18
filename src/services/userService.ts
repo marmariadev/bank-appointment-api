@@ -25,7 +25,7 @@ export const createUser = (name: string, email: string, birthdate: Date, nDni: s
   return newUser;
 };
 
-export const validateUserLogin = (username: string, password: string): IUser | null => {
+export const loginUser = (username: string, password: string): IUser | null => {
   const credentialId = credentialService.checkCredential(username, password);
   if (credentialId !== null) {
     return users.find(user => user.credentialsId === credentialId) || null;

@@ -1,5 +1,5 @@
 import IUser from '../interfaces/IUser';
-import { createCredential } from './credentialService';
+import * as credentialService from './credentialService';
 
 const users: IUser[] = [];
 
@@ -12,7 +12,7 @@ export const getUserById = (id: number): IUser | undefined => {
 };
 
 export const createUser = (name: string, email: string, birthdate: Date, nDni: string, username: string, password: string): IUser => {
-  const credentialsId = createCredential(username, password);
+  const credentialsId = credentialService.createCredential(username, password);
   const newUser: IUser = {
     id: users.length + 1,
     name,
@@ -23,4 +23,12 @@ export const createUser = (name: string, email: string, birthdate: Date, nDni: s
   };
   users.push(newUser);
   return newUser;
+};
+
+export const validateUserLogin = (username: string, password: string): IUser | null => {
+  const credentialId = credentialService.checkCredential(username, password);
+  if (credentialId !== null) {
+    return users.find(user => user.credentialsId === credentialId) || null;
+  }
+  return null;
 };
